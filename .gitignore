@@ -1,0 +1,23 @@
+# Compiled packages and AUR build artifacts
+*.tar.*
+*.pkg.tar.*
+*.sig
+
+# makepkg build folders
+/src/
+/pkg/
+
+# Logs and local caches
+*.log
+*.bak
+*.swp
+.cache/
+log.txt
+
+# Editor-specific
+.vscode/
+.idea/
+*~
+
+# User-specific config or screenshots
+Screenshots/

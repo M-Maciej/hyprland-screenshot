@@ -1,7 +1,7 @@
 # hyprland-screenshot
 
 📸 A fast, flexible screenshot tool for Hyprland using grim, slurp, wl-copy, and hyprctl.
-
+https://aur.archlinux.org/packages/hyprland-screenshot
 ## Features
 
 - Area selectable, window, monitor, or full-all-monitor screenshots

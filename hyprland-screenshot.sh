@@ -4,7 +4,7 @@ VERSION="1.0.0"
 DEFAULT_MODE="area"
 DEFAULT_PREFIX="Screenshot"
 DEFAULT_LOCATION="$HOME/Screenshots"
-LOGFILE="$HOME/.cache/gs-screenshot.log"
+LOGFILE="$HOME/.cache/hyprland-screenshot.log"
 
 mkdir -p "$(dirname "$LOGFILE")"
 echo -e "\n=== $(date '+%F %T.%3N') - Starting screenshot ===" >> "$LOGFILE"
@@ -29,8 +29,7 @@ SOUND_ENABLED="true"
 QUIET="false"
 
 # === Dependency check ===
-REQUIRED_COMMANDS=(grim slurp wl-copy hyprctl)
-OPTIONAL_COMMANDS=(jq notify-send canberra-gtk-play paplay)
+REQUIRED_COMMANDS=(grim slurp wl-copy hyprctl jq notify-send canberra-gtk-play)
 
 for cmd in "${REQUIRED_COMMANDS[@]}"; do
   if ! command -v "$cmd" &>/dev/null; then
@@ -107,12 +106,8 @@ case "$MODE" in
     grim -g "$GEOM" - | tee "$FILENAME" | wl-copy
     ;;
   monitor)
-    if command -v jq &>/dev/null; then
     MONITOR_INDEX=$(hyprctl activewindow -j | jq -r '.monitor')
     MONITOR=$(hyprctl monitors -j | jq -r ".[$MONITOR_INDEX].name")
-else
-    MONITOR=$(hyprctl activewindow | grep monitor | awk '{print $2}')
-fi
     grim -o "$MONITOR" "$FILENAME"
     wl-copy < "$FILENAME"
     ;;
@@ -141,15 +136,12 @@ fi
 play_sound() {
   if command -v canberra-gtk-play &>/dev/null; then
     canberra-gtk-play -i camera-shutter -d "screenshot" &
-  elif command -v paplay &>/dev/null && [[ -f /usr/share/sounds/freedesktop/stereo/camera-shutter.oga ]]; then
-    paplay /usr/share/sounds/freedesktop/stereo/camera-shutter.oga &
   fi
 }
 
 if [[ "$SOUND_ENABLED" == "true" ]]; then
   play_sound
 fi
-
 
 echo "✅ Done!" >> "$LOGFILE"
 

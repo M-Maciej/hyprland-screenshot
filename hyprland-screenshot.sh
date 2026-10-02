@@ -123,10 +123,16 @@ esac
 
 # === Notification ===
 if [[ "$QUIET" == "false" && -f "$FILENAME" ]]; then
-  notify-send -u normal -a Screenshot -i "$FILENAME" \
-    --action=open:"Open Image" \
-    --action=folder:"Show Folder" \
-    "📸 Screenshot ($MODE) saved!" "$(basename "$FILENAME")" &>/dev/null &
+  (
+    action=$(notify-send -u normal -a Screenshot -i "$FILENAME" \
+      --action=open="Open Image" \
+      --action=folder="Show Folder" \
+      "📸 Screenshot ($MODE) saved!" "$(basename "$FILENAME")")
+    case "$action" in
+      open)   xdg-open "$FILENAME" ;;
+      folder) xdg-open "$(dirname "$FILENAME")" ;;
+    esac
+  ) &>/dev/null &
 elif [[ "$QUIET" == "false" ]]; then
   notify-send -u critical -a Screenshot "❌ Screenshot failed" "No file created"
   exit 1
